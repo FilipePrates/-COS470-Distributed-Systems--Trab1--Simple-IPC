@@ -13,7 +13,7 @@ export async function isProcessRunning(processName) {
         return false;
     }
   })();
-  console.log("cmd", cmd);
+
   if (!cmd) {
     return false;
   }
