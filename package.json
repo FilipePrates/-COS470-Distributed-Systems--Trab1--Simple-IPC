@@ -1,0 +1,20 @@
+{
+  "name": "cos470-distributed-systems--trab1--simple-ipc",
+  "version": "1.0.0",
+  "description": "",
+  "main": "main.js",
+  "scripts": {
+    "test": "echo \"Error: no tests needed\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/FilipePrates/COS470-Distributed-Systems--Trab1--Simple-IPC.git"
+  },
+  "author": "Filipe Prates",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/FilipePrates/COS470-Distributed-Systems--Trab1--Simple-IPC/issues"
+  },
+  "homepage": "https://github.com/FilipePrates/COS470-Distributed-Systems--Trab1--Simple-IPC#readme",
+  "type": "module"
+}
