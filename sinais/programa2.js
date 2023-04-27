@@ -7,19 +7,32 @@
 // formas de esperar, busy wait e blocking wait (passado como parˆametro para o programa).
 // Descubra como implementar cada um destas formas de fazer um processo esperar!
 import process from "node:process";
+import readline from "readline";
 
 export async function programa2_sinais(wait_type) {
   try {
     console.log(wait_type);
-    process.stdin.resume();
-    process.on("PING", () => {
-      console.log("Recebido sinal 'PING'.");
+    // Como eu tou no Windows, preciso escutar os eventos com o readline e passar esse evento para o programa2.
+    if (process.platform === "win32") {
+      var rl = readline.createInterface({
+        input: process.stdin,
+        output: process.stdout,
+      });
+      rl.on("DASD", function () {
+        console.log("sigInt");
+        process.emit("SIGINT");
+      });
+    }
+    process.on("SIGINT", () => {
+      console.log("Recebido sinal 'SIGINT'.");
+      process.exit();
     });
     process.on("PONG", () => {
       console.log("Recebido sinal 'PONG'.");
     });
-    process.on("KILL", () => {
-      process.kill();
+    process.on("SIGKILL", () => {
+      console.log("Recebido sinal 'SIGKILL'. Terminando o processo.");
+      process.exit();
     });
   } catch (e) {
     console.error(e);

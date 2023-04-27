@@ -37,7 +37,7 @@ let menu = function () {
             console.log(
               `Programa2 Rodando... waitType:${waitType}...\n Esperado que nada aconteça caso processo não receba sinais.`
             );
-            // programa2_sinais(waitType);
+            programa2_sinais(waitType);
           }
         );
         break;
