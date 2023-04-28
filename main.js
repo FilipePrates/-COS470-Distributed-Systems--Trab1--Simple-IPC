@@ -2,6 +2,9 @@ import readline from "readline";
 import { spawn } from 'node:child_process';
 import { programa1_sinais } from "./sinais/programa1.js";
 import { programa2_sinais } from "./sinais/programa2.js";
+import { produtor_pipes } from "./pipes/produtor.js";
+import { consumidor_pipes } from "./pipes/consumidor.js";
+
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
@@ -46,11 +49,11 @@ let menu = function () {
         );
         break;
       case "3":
-        const child = spawn("node", ["./sinais/programa2.js", "blocking"]);
-        child.stdout.on("data", (data) => {
+        const program2 = spawn("node", ["./sinais/programa2.js", "blocking"]);
+        program2.stdout.on("data", (data) => {
           console.log(`Programa2: ${data}`);
         });
-        child.on('exit', function () {
+        program2.on('exit', function () {
           console.log(`Programa2 terminado.`)
         });
         setTimeout(()=>
@@ -64,6 +67,11 @@ let menu = function () {
             });
           });
         },1000)
+        break;
+      case "4":
+        const child = spawn("node", ["./sinais/programa2.js", "blocking"]);
+        produtor_pipes
+        console.log(4)
         break;
       default:
         console.log("respeita as opções pf");

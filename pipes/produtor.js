@@ -1,3 +1,6 @@
+import process from "node:process";
+process.stdin.resume();
+
 import { randomInt } from "node:crypto";
 
 export async function produtor_pipes(stop = 1000) {
@@ -6,10 +9,11 @@ export async function produtor_pipes(stop = 1000) {
     for(let i = 0; i < stop; i++){
         const delta = randomInt(100)
         n = n + delta
-        pipeWrite.write(n)
+        console.log(n, "manda pro consumidor")
+        // pipeWrite.write(n)
     }
-    pipeWrite.write("0\n")
-    pipeWrite.end()
+    // pipeWrite.write("0\n")
+    // pipeWrite.end()
   } catch (e) {
     console.error(e);
   } finally {
@@ -17,4 +21,4 @@ export async function produtor_pipes(stop = 1000) {
   }
 }
 
-produtor_pipes(10)
+if(process.argv[2]) produtor_pipes(process.argv[2])
