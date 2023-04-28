@@ -1,6 +1,6 @@
-# Project Title
+# UFRJ - Sistemas Distribuídos
 
-Sistemas Distribuídos - Trabalho Prático 1
+Trabalho Prático 1
 
 ## Description
 
