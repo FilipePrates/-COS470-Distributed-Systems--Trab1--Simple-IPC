@@ -3,6 +3,7 @@ import { spawn, fork } from 'node:child_process';
 import { programa1_sinais } from "./sinais/programa1.js";
 import { programa2_sinais } from "./sinais/programa2.js";
 import { consumidor_pipes } from "./pipes/consumidor.js";
+import { servidor_sockets } from "./sockets/servidor.js";
 
 const rl = readline.createInterface({
   input: process.stdin,
@@ -16,6 +17,7 @@ console.log(
   "2 - Sinais. Programa2 escuta sinais\n",
   "3 - Sinais. Programa1 se comunicando com Programa2\n",
   "4 - Pipes. Produtor gera potenciais primos, consumidor recebe e testa\n",
+  "5 - Sockets. Através de TCP simular cliente-servidor com websockets.\n",
 );
 let menu = function () {
   rl.question("Qual vai? (1/2/3/4/5/6/7): ", function (fun) {
@@ -26,7 +28,7 @@ let menu = function () {
             let loop = function (){
               rl.question("Sinal a ser enviado (SIGINT/SIGTERM/SIGPIPE): ", function (signal) {
                 console.log(
-                  `Programa 1 Rodando... destination_PID:${processID}, signal:${signal}...`
+                  `Programa1: (PID:${process.pid}) destination_PID:${processID}, signal:${signal}...`
                 );
                 programa1_sinais(processID, signal, process.pid).then(()=>{loop()});
               });
@@ -40,7 +42,7 @@ let menu = function () {
           "busy ou blocking wait? (block/busy): ",
           function (waitType) {
             console.log(
-              `Programa 2 Rodando... wait_type:${waitType}...`
+              `Programa2: (PID:${process.pid}) wait_type:${waitType}...`
             );
             programa2_sinais(waitType);
           }
@@ -52,20 +54,35 @@ let menu = function () {
           console.log(`Programa2: ${data}`);
         });
         program2.on('exit', function () {
-          console.log(`Programa2 terminado.`)
+          process.exit()
         });
         talk(program2.pid, process.pid);
         break;
       case "4":
-        const child = spawn("node", ["./pipes/produtor.js", 12]);
-        child.on('error', (err) => {
-          console.log(error)
-        });
-        child.stdout.on('data', async (data) => {
-          console.log(`${data}`)
-          let payload = `${data}`.split(" ")
-          consumidor_pipes(payload[payload.length - 1])
-        });
+        rl.question(
+          "Gerar quantos potenciais primos?: ",
+          function (num) {
+            const child = spawn("node", ["./pipes/produtor.js", num]);
+            child.stdout.on('data', async (data) => {
+              console.log(`${data}`)
+              let payload = `${data}`.split(" ")
+              consumidor_pipes(payload[payload.length - 1])
+            });
+          }
+        );
+        break;
+      case "5":
+        rl.question(
+          "Gerar quantos potenciais primos?: ",
+          function (num) {
+            const child = spawn("node", ["./sockets/cliente.js", num]);
+            child.stdout.on('data', async (data) => {
+              console.log(`${data}`)
+              let payload = `${data}`.split(" ")
+              servidor_sockets(payload[payload.length - 1])
+            });
+          }
+        );
         break;
       default:
         console.log("respeita as opções pf");
@@ -75,16 +92,19 @@ let menu = function () {
 };
 menu();
 
-
+// o Terceiro signal não usado na cone
 let talk = function(child_pid, process_pid){
   setTimeout(()=>
   {
-    console.log(`Programa1: Enviando SIGINT para ${child_pid}`)
+    console.log(`Programa1: (PID:${process.pid}) Enviando SIGINT para ${child_pid}`)
     programa1_sinais(child_pid, "SIGINT", process_pid).then(() => {
-      console.log(`Programa1: Enviando SIGINT para ${child_pid}`)
-      programa1_sinais(child_pid, "SIGINT", process_pid).then(() => {
-        console.log(`Programa1: Enviando SIGPIPE para ${child_pid}`)
-        programa1_sinais(child_pid, "SIGPIPE", process_pid);
+      console.log(`Programa1: (PID:${process_pid}) Enviando SIGTERM para ${child_pid}`)
+      programa1_sinais(child_pid, "SIGTERM", process_pid).then(() => {
+        console.log(`Programa1: (PID:${process_pid}) Enviando SIGINT para ${child_pid}`)
+        programa1_sinais(child_pid, "SIGINT", process_pid).then(() => {
+          console.log(`Programa1: (PID:${process_pid}) Enviando SIGPIPE para ${child_pid}`)
+          programa1_sinais(child_pid, "SIGPIPE", process_pid);
+        });
       });
     });
   },1000)

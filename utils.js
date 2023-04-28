@@ -1,7 +1,7 @@
 import child_process from "child_process";
 
 export async function isProcessRunning(PID) {
-  const cmd = await (() => {
+  const cmd = (() => {
     switch (process.platform) {
       case "win32":
         return `tasklist`;
@@ -13,17 +13,12 @@ export async function isProcessRunning(PID) {
         return false;
     }
   })();
-
-  if (!cmd) {
-    return false;
-  }
-
-  return new Promise((resolve, reject) => {
-    child_process.exec(cmd, (err, stdout, stderr) => {
+  return cmd ? new Promise((resolve, reject) => {
+    child_process.exec(cmd, (err, stdout) => {
       if (err) reject(err);
       resolve(stdout.toLowerCase().indexOf(PID) > -1);
     });
-  });
+  }) : false;
 }
 
 

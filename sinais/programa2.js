@@ -19,15 +19,15 @@ export async function programa2_sinais(wait_type) {
         while(!received){
           // 🥲
           process.on("SIGINT", () => {
-            console.log("Recebido sinal 'SIGINT'.");
+            console.log(`(PID:${process.pid}) Recebido sinal 'SIGINT'.`);
             received = true
           });
           process.on("SIGTERM", () => {
-            console.log("Recebido sinal 'SIGTERM'.");
+            console.log(`(PID:${process.pid}) Recebido sinal 'SIGTERM'.`);
             received = true
           });
           process.on("SIGPIPE", () => {
-            console.log("Recebido sinal 'SIGPIPE'. Hora de testar os Pipes??");
+            console.log(`(PID:${process.pid}) Recebido sinal 'SIGPIPE'. Hora de testar os Pipes??`);
             received = true
             process.exit()
           });
@@ -35,13 +35,13 @@ export async function programa2_sinais(wait_type) {
         }
       case 'blocking':
         process.on("SIGINT", () => {
-          console.log("Recebido sinal 'SIGINT'.");
+          console.log(`(PID:${process.pid}) Recebido sinal 'SIGINT'.`);
         });
         process.on("SIGTERM", () => {
-          console.log("Recebido sinal 'SIGTERM'.");
+          console.log(`(PID:${process.pid}) Recebido sinal 'SIGTERM'.`);
         });
         process.on("SIGPIPE", () => {
-          console.log("Recebido sinal 'SIGPIPE'. Hora de testar os Pipes??");
+          console.log(`(PID:${process.pid}) Recebido sinal 'SIGPIPE'. Hora de testar os Pipes??`);
           process.exit()
         });
     }
