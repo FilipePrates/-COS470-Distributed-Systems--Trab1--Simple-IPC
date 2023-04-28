@@ -20,14 +20,18 @@ export async function programa2_sinais(wait_type) {
           // 🥲
           process.on("SIGINT", () => {
             console.log("Recebido sinal 'SIGINT'.");
+            received = true
           });
           process.on("SIGTERM", () => {
             console.log("Recebido sinal 'SIGTERM'.");
+            received = true
           });
           process.on("SIGPIPE", () => {
             console.log("Recebido sinal 'SIGPIPE'. Hora de testar os Pipes??");
+            received = true
             process.exit()
           });
+          received = false
         }
       case 'blocking':
         process.on("SIGINT", () => {

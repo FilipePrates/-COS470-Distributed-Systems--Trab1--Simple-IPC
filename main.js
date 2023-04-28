@@ -1,8 +1,7 @@
 import readline from "readline";
-import { spawn } from 'node:child_process';
+import { spawn, fork } from 'node:child_process';
 import { programa1_sinais } from "./sinais/programa1.js";
 import { programa2_sinais } from "./sinais/programa2.js";
-import { produtor_pipes } from "./pipes/produtor.js";
 import { consumidor_pipes } from "./pipes/consumidor.js";
 
 const rl = readline.createInterface({
@@ -17,7 +16,6 @@ console.log(
   "2 - Sinais. Programa2 escuta sinais\n",
   "3 - Sinais. Programa1 se comunicando com Programa2\n",
   "4 - Pipes. Produtor gera potenciais primos, consumidor recebe e testa\n",
-
 );
 let menu = function () {
   rl.question("Qual vai? (1/2/3/4/5/6/7): ", function (fun) {
@@ -56,22 +54,18 @@ let menu = function () {
         program2.on('exit', function () {
           console.log(`Programa2 terminado.`)
         });
-        setTimeout(()=>
-        {
-          console.log(`Programa1: Enviando SIGINT para ${child.pid}`)
-          programa1_sinais(child.pid, "SIGINT", process.pid).then(() => {
-            console.log(`Programa1: Enviando SIGINT para ${child.pid}`)
-            programa1_sinais(child.pid, "SIGINT", process.pid).then(() => {
-              console.log(`Programa1: Enviando SIGPIPE para ${child.pid}`)
-              programa1_sinais(child.pid, "SIGPIPE", process.pid);
-            });
-          });
-        },1000)
+        talk(program2.pid, process.pid);
         break;
       case "4":
-        const child = spawn("node", ["./sinais/programa2.js", "blocking"]);
-        produtor_pipes
-        console.log(4)
+        const child = spawn("node", ["./pipes/produtor.js", 12]);
+        child.on('error', (err) => {
+          console.log(error)
+        });
+        child.stdout.on('data', async (data) => {
+          console.log(`${data}`)
+          let payload = `${data}`.split(" ")
+          consumidor_pipes(payload[payload.length - 1])
+        });
         break;
       default:
         console.log("respeita as opções pf");
@@ -80,3 +74,18 @@ let menu = function () {
   });
 };
 menu();
+
+
+let talk = function(child_pid, process_pid){
+  setTimeout(()=>
+  {
+    console.log(`Programa1: Enviando SIGINT para ${child_pid}`)
+    programa1_sinais(child_pid, "SIGINT", process_pid).then(() => {
+      console.log(`Programa1: Enviando SIGINT para ${child_pid}`)
+      programa1_sinais(child_pid, "SIGINT", process_pid).then(() => {
+        console.log(`Programa1: Enviando SIGPIPE para ${child_pid}`)
+        programa1_sinais(child_pid, "SIGPIPE", process_pid);
+      });
+    });
+  },1000)
+};
