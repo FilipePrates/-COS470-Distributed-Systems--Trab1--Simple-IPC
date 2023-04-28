@@ -7,12 +7,14 @@ const rl = readline.createInterface({
   output: process.stdout,
 });
 
-console.log("Coe monitor, quer executar qual parte do Projeto?");
+console.log(`PID: ${process.pid}\n`, "Coe monitor, quer executar qual parte do Projeto?");
 console.log(
-  `PID: ${process.pid}\n`,
+  "\n",
   "1 - Sinais. Programa1 pede um PID e signal para ser enviado\n",
   "2 - Sinais. Programa2 escuta sinais\n",
-  "3 - Sinais. Programa1 se comunicando com Programa2\n"
+  "3 - Sinais. Programa1 se comunicando com Programa2\n",
+  "4 - Pipes. Produtor gera potenciais primos, consumidor recebe e testa\n",
+
 );
 let menu = function () {
   rl.question("Qual vai? (1/2/3/4/5/6/7): ", function (fun) {
@@ -53,11 +55,11 @@ let menu = function () {
         });
         setTimeout(()=>
         {
-          console.log(`Programa2: Enviando SIGINT para ${child.pid}`)
+          console.log(`Programa1: Enviando SIGINT para ${child.pid}`)
           programa1_sinais(child.pid, "SIGINT", process.pid).then(() => {
-            console.log(`Programa2: Enviando SIGINT para ${child.pid}`)
+            console.log(`Programa1: Enviando SIGINT para ${child.pid}`)
             programa1_sinais(child.pid, "SIGINT", process.pid).then(() => {
-              console.log(`Programa2: Enviando SIGPIPE para ${child.pid}`)
+              console.log(`Programa1: Enviando SIGPIPE para ${child.pid}`)
               programa1_sinais(child.pid, "SIGPIPE", process.pid);
             });
           });

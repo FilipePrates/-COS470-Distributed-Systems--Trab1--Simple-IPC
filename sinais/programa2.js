@@ -24,7 +24,7 @@ export async function programa2_sinais(wait_type) {
             console.log("Recebido sinal 'SIGTERM'.");
           });
           process.on("SIGPIPE", () => {
-            console.log("Hora de testar os Pipes??");
+            console.log("Recebido sinal 'SIGPIPE'. Hora de testar os Pipes??");
             process.exit()
           });
         }
@@ -36,7 +36,7 @@ export async function programa2_sinais(wait_type) {
           console.log("Recebido sinal 'SIGTERM'.");
         });
         process.on("SIGPIPE", () => {
-          console.log("Hora de testar os Pipes??");
+          console.log("Recebido sinal 'SIGPIPE'. Hora de testar os Pipes??");
           process.exit()
         });
     }

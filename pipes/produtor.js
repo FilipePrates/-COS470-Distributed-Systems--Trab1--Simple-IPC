@@ -1,12 +1,12 @@
 import { randomInt } from "node:crypto";
 
-export async function produtor_pipes(wait_type) {
+export async function produtor_pipes(stop = 1000) {
   try {
-    let start = 1
-    for(let i = 0; i < n; i++){
-        const delta = randomInt({min:1, max: 100})
-        start = start + delta
-        pipeWrite.write(message)
+    let n = 1
+    for(let i = 0; i < stop; i++){
+        const delta = randomInt(100)
+        n = n + delta
+        pipeWrite.write(n)
     }
     pipeWrite.write("0\n")
     pipeWrite.end()
@@ -16,3 +16,5 @@ export async function produtor_pipes(wait_type) {
     return;
   }
 }
+
+produtor_pipes(10)
