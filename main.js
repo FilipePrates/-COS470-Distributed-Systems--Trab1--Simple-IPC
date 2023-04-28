@@ -28,7 +28,7 @@ let menu = function () {
                 programa1_sinais(processID, signal, process.pid).then(()=>{loop()});
               });
             }
-            loop()
+            loop();
           }
         )
         break;
@@ -44,15 +44,23 @@ let menu = function () {
         );
         break;
       case "3":
-        const programa2 = spawn("node", ["programa2.js", "blocking"]);
-        programa2
-        programa1_sinais(program2PID, "SIGINT", process.pid).then(() => {
-          programa1_sinais(program2PID, "SIGTERM", process.pid).then(() => {
-            programa1_sinais(program2PID, "SIGTERM", process.pid).then(() => {
-              programa1_sinais(program2PID, "SIGPIPE", process.pid);
+        const child = spawn("node", ["./sinais/programa2.js", "blocking"]);
+        child.stdout.on("data", (data) => {
+          console.log(`Programa2: ${data}`);
+        });
+        child.on('exit', function () {
+          console.log(`Programa2 terminado.`)
+        });
+        setTimeout(()=>
+        {
+          programa1_sinais(child.pid, "SIGINT", process.pid).then(() => {
+            programa1_sinais(child.pid, "SIGINT", process.pid).then(() => {
+              programa1_sinais(child.pid, "SIGINT", process.pid).then(() => {
+                programa1_sinais(child.pid, "SIGPIPE", process.pid);
+              });
             });
           });
-        });
+        },1000)
         break;
       default:
         console.log("respeita as opções pf");

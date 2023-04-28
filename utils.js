@@ -1,6 +1,6 @@
 import child_process from "child_process";
 
-export async function isProcessRunning(processName) {
+export async function isProcessRunning(PID) {
   const cmd = await (() => {
     switch (process.platform) {
       case "win32":
@@ -13,7 +13,7 @@ export async function isProcessRunning(processName) {
         return false;
     }
   })();
-
+  
   if (!cmd) {
     return false;
   }
@@ -21,7 +21,7 @@ export async function isProcessRunning(processName) {
   return new Promise((resolve, reject) => {
     child_process.exec(cmd, (err, stdout, stderr) => {
       if (err) reject(err);
-      resolve(stdout.toLowerCase().indexOf(processName.toLowerCase()) > -1);
+      resolve(stdout.toLowerCase().indexOf(PID) > -1);
     });
   });
 }

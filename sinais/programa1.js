@@ -18,5 +18,3 @@ export async function programa1_sinais(destination_PID, signal, menu_PID) {
     return;
   }
 }
-if(process.argv[2]) programa1_sinais(process.argv[2],process.argv[3],process.argv[4]);
-

@@ -6,6 +6,11 @@
 // handlers seu programa fica aguardando a chegada de sinais. Vocˆe deve implementar duas
 // formas de esperar, busy wait e blocking wait (passado como parˆametro para o programa).
 // Descubra como implementar cada um destas formas de fazer um processo esperar!
+process.stdin.resume();
+console.log(process.argv)
+if(process.argv[2]) programa2_sinais(process.argv[2])
+
+
 import process from "node:process";
 
 export async function programa2_sinais(wait_type) {
@@ -46,5 +51,3 @@ export async function programa2_sinais(wait_type) {
     return;
   }
 }
-if(process.argv[2]) programa2_sinais(process.argv[2]);
-
