@@ -7,33 +7,39 @@
 // formas de esperar, busy wait e blocking wait (passado como parˆametro para o programa).
 // Descubra como implementar cada um destas formas de fazer um processo esperar!
 import process from "node:process";
-import readline from "readline";
 
 export async function programa2_sinais(wait_type) {
   try {
-    console.log(wait_type);
-    // Como eu tou no Windows, preciso escutar os eventos com o readline e passar esse evento para o programa2.
-    if (process.platform === "win32") {
-      var rl = readline.createInterface({
-        input: process.stdin,
-        output: process.stdout,
-      });
-      rl.on("DASD", function () {
-        console.log("sigInt");
-        process.emit("SIGINT");
-      });
+    process.stdin.resume();
+    switch(wait_type){
+      case 'busy':
+        let received = false
+        while(!received){
+          // 🥲
+          process.on("SIGINT", () => {
+            console.log("Recebido sinal 'SIGINT'.");
+          });
+          process.on("SIGTERM", () => {
+            console.log("Recebido sinal 'SIGTERM'.");
+          });
+          process.on("SIGPIPE", () => {
+            console.log("Hora de testar os Pipes??");
+            process.exit()
+          });
+        }
+      case 'blocking':
+        process.on("SIGINT", () => {
+          console.log("Recebido sinal 'SIGINT'.");
+        });
+        process.on("SIGTERM", () => {
+          console.log("Recebido sinal 'SIGTERM'.");
+        });
+        process.on("SIGPIPE", () => {
+          console.log("Hora de testar os Pipes??");
+          process.exit()
+        });
     }
-    process.on("SIGINT", () => {
-      console.log("Recebido sinal 'SIGINT'.");
-      process.exit();
-    });
-    process.on("PONG", () => {
-      console.log("Recebido sinal 'PONG'.");
-    });
-    process.on("SIGKILL", () => {
-      console.log("Recebido sinal 'SIGKILL'. Terminando o processo.");
-      process.exit();
-    });
+
   } catch (e) {
     console.error(e);
   } finally {

@@ -14,10 +14,13 @@ https://www.cos.ufrj.br/~daniel/sd-2023/trabalhos/TP1.pdf
 ```
 sudo apt update
 ```
+```
+sudo apt install nodejs
+```
 
 ### Executando
 
-* How to run the program
+* Para rodar o sistema
 ```
 node main.js
 ```

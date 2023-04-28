@@ -9,9 +9,8 @@ import { isProcessRunning } from "../utils.js";
 export async function programa1_sinais(destination_PID, signal) {
   try {
     const destinationExists = await isProcessRunning(destination_PID);
-    console.log("destinationExists", destinationExists);
     if (!destinationExists) throw "Processo não encontrado.";
-    process.kill(destination_PID, signal);
+    await process.kill(destination_PID, signal);
   } catch (e) {
     console.error(e);
   } finally {
