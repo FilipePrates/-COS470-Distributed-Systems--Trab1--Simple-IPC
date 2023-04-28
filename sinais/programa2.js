@@ -46,3 +46,5 @@ export async function programa2_sinais(wait_type) {
     return;
   }
 }
+if(process.argv[2]) programa2_sinais(process.argv[2]);
+

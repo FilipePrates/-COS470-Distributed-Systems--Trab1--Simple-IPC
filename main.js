@@ -1,11 +1,11 @@
 import readline from "readline";
+import { spawn } from 'node:child_process';
+import { programa1_sinais } from "./sinais/programa1.js";
+import { programa2_sinais } from "./sinais/programa2.js";
 const rl = readline.createInterface({
   input: process.stdin,
   output: process.stdout,
 });
-
-import { programa1_sinais } from "./sinais/programa1.js";
-import { programa2_sinais } from "./sinais/programa2.js";
 
 console.log("Coe monitor, quer executar qual parte do Projeto?");
 console.log(
@@ -44,17 +44,15 @@ let menu = function () {
         );
         break;
       case "3":
-        rl.question(
-          "Identificador do Processo destino: ",
-          function (processID) {
-            rl.question("Sinal a ser enviado: ", function (signal) {
-              console.log(
-                `Programa1 Rodando... destination_PID:${processID}, signal:${signal}`
-              );
-              programa1_sinais(processID, signal);
+        const programa2 = spawn("node", ["programa2.js", "blocking"]);
+        programa2
+        programa1_sinais(program2PID, "SIGINT", process.pid).then(() => {
+          programa1_sinais(program2PID, "SIGTERM", process.pid).then(() => {
+            programa1_sinais(program2PID, "SIGTERM", process.pid).then(() => {
+              programa1_sinais(program2PID, "SIGPIPE", process.pid);
             });
-          }
-        );
+          });
+        });
         break;
       default:
         console.log("respeita as opções pf");
