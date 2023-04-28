@@ -25,7 +25,7 @@ let menu = function () {
                 console.log(
                   `Programa 1 Rodando... destination_PID:${processID}, signal:${signal}...`
                 );
-                programa1_sinais(processID, signal).then(()=>{loop()});
+                programa1_sinais(processID, signal, process.pid).then(()=>{loop()});
               });
             }
             loop()

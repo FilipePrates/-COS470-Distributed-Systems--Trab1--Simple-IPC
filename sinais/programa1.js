@@ -6,13 +6,14 @@
 
 import { isProcessRunning } from "../utils.js";
 
-export async function programa1_sinais(destination_PID, signal) {
+export async function programa1_sinais(destination_PID, signal, menu_PID) {
   try {
     const destinationExists = await isProcessRunning(destination_PID);
-    if (!destinationExists) throw "Processo não encontrado.";
+    if (!destinationExists) throw "Erro - Processo não encontrado.";
     await process.kill(destination_PID, signal);
   } catch (e) {
     console.error(e);
+    process.kill(menu_PID, "SIGTERM")
   } finally {
     return;
   }
