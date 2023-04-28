@@ -53,11 +53,12 @@ let menu = function () {
         });
         setTimeout(()=>
         {
+          console.log(`Programa2: Enviando SIGINT para ${child.pid}`)
           programa1_sinais(child.pid, "SIGINT", process.pid).then(() => {
+            console.log(`Programa2: Enviando SIGINT para ${child.pid}`)
             programa1_sinais(child.pid, "SIGINT", process.pid).then(() => {
-              programa1_sinais(child.pid, "SIGINT", process.pid).then(() => {
-                programa1_sinais(child.pid, "SIGPIPE", process.pid);
-              });
+              console.log(`Programa2: Enviando SIGPIPE para ${child.pid}`)
+              programa1_sinais(child.pid, "SIGPIPE", process.pid);
             });
           });
         },1000)
@@ -68,5 +69,4 @@ let menu = function () {
     }
   });
 };
-
 menu();
