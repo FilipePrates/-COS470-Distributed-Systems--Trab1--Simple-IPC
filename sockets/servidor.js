@@ -10,18 +10,16 @@ import { isPrime } from "../utils.js";
 // const wss = new WebSocket.Server({ port: 8080 });
 
 export async function servidor_sockets(number) {
-    wss.on('connection', (ws) => {
-        console.log(`Servidor: (PID:${process.pid}) Conectou através do Websocket`);
-        ws.on('message', (data) => {
-            console.log(`Servidor: (PID:${process.pid} recebeu ${data}`);
-            ws.send(`Servidor: (PID:${process.pid} recebeu ${parseInt(data, 20)}`);
-           
-        });
+  wss.on("connection", (ws) => {
+    console.log(`Servidor: (PID:${process.pid}) Conectou através do Websocket`);
+    ws.on("message", (data) => {
+      console.log(`Servidor: (PID:${process.pid} recebeu ${data}`);
+      ws.send(`${parseInt(data, 20)}`);
+      console.log(`(PID:${process.pid}) ${number} É primo? ${isPrime(number)}`);
+      if (parseInt(data, 20) == 0) {
+        process.exit();
+      }
     });
-    console.log(`Servidor (PID:${process.pid}) recebeu ${number} É primo? ${isPrime(number)}`)
-    if(number == 0) {
-        ws.send('0')
-        process.exit()
-    } 
+  });
 }
-if(process.argv[2]) servidor_sockets(process.argv[2])
+if (process.argv[2]) servidor_sockets(process.argv[2]);
